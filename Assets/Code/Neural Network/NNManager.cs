@@ -475,10 +475,10 @@ public class NNManager : MonoBehaviour
         else
             reachedEndCount = 0;
 
-        if (reachedEndCount>5)
+        if (reachedEndCount>6)
         {
             string timedate = "_"+System.DateTime.Now.Hour+"-"+System.DateTime.Now.Minute/*+"_"+System.DateTime.Now.Year + ":" + System.DateTime.Now.Month + ":" + System.DateTime.Now.Day*/;
-            Save("autosave"+generationNumber+timedate);
+            Save("auto"+generationNumber+timedate);
             reachedEndCount = 0;
         }
 
@@ -636,9 +636,6 @@ public class NNManager : MonoBehaviour
     void Save(string fileName)
     {
         int arraySize = layers[0] * layers[1] + layers[1] * layers[2] + layers[2] * layers[3];
-        //List<NeuralNetwork> newNets = networks;
-        //newNets.Sort();
-       // newNets.RemoveRange(0, nrUnits / 2);
 
         string[] output = new string[arraySize*nrUnits+1];
         List<string> lines = new List<string>();
@@ -664,12 +661,12 @@ public class NNManager : MonoBehaviour
         output = lines.ToArray();
         try
         {
-            System.IO.File.WriteAllLines(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)+"/NeuralNetworkGunKol/" + fileName + ".txt", output);
+            System.IO.File.WriteAllLines((Application.dataPath)+"/Saves/" + fileName + ".txt", output);
         }
         catch
         {
-            System.IO.Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/NeuralNetworkGunKol/");
-            System.IO.File.WriteAllLines(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/NeuralNetworkGunKol/" + fileName + ".txt", output);
+            System.IO.Directory.CreateDirectory((Application.dataPath) + "/Saves/");
+            System.IO.File.WriteAllLines((Application.dataPath) + "/Saves/" + fileName + ".txt", output);
         }
     }
 
@@ -677,7 +674,7 @@ public class NNManager : MonoBehaviour
     {
         int arraySize = layers[0] * layers[1] + layers[1] * layers[2] + layers[2] * layers[3];
         try {
-            string[] input = System.IO.File.ReadAllLines(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/NeuralNetworkGunKol/" + fileName + ".txt");
+            string[] input = System.IO.File.ReadAllLines((Application.dataPath) + "/Saves/" + fileName + ".txt");
 
             generationNumber = Int32.Parse(input[0]) + 1;
             GameObject canvasObject = GameObject.FindGameObjectWithTag("canvas");

@@ -1,0 +1,15 @@
+NeuralNetworkPathfinding-Final
+
+Interface and Actions:
+
+The network creates a new generation every 250 seconds, this can be sped up.
+You can also create a new generation by pressing the "New Generation" button, or pressing "Spacebar".
+
+Save / Load
+To save or load, write the filename of the already saved file, or the file you want to save. On windows and Linux, the file will be saved to the Data-folder, next to the executable. Save files will also be generated every six concurrent successful attempts by the AI. Successful indicates that they went followed the path: White-Yellow-Green-Teal-Purple-White.
+
+Unchecking / Checking the Mutate box, will disable / enable mutation.
+
+Unchecking / Checking the Pathfinding box, will disable / enable the learning of basic pathfinding.
+
+Unchecking / Checking the Colliders box, will disable / enable the learning of basic avoidance of obstacles. (RECOMMENDED UNCHECKED)
