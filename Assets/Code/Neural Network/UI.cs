@@ -10,13 +10,14 @@ public class Interface
     private Button saveButton;
     private Button loadButton;
     private Button newGenButton;
-    public bool save;
-    public bool load;
-    public string fileName;
-    public Text inputField;
     private Toggle mutateToggle;
     private Toggle pathToggle;
     private Toggle collToggle;
+
+    public string fileName;
+    public Text inputField;
+    public bool save;
+    public bool load;
     public bool mutate;
     public bool pathfinding;
     public bool colliders;
@@ -30,6 +31,8 @@ public class Interface
         colliders = true;
 
         save = false; load = false;
+
+        //Connecting all interface interactables, to the code
         GameObject canvasObject = GameObject.FindGameObjectWithTag("canvas");
         Transform child = canvasObject.transform.Find("Slider");
         speedSlider = child.GetComponent<Slider>();
@@ -82,11 +85,6 @@ public class Interface
     {
         load = true;
         fileName = inputField.text;
-    }
-
-    public bool getOnClick()
-    {
-        return false;
     }
     
 }

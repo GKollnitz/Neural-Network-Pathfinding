@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neural-Network-Pathfinding", "Neural-Network-Pathfinding.csproj", "{2DAECC59-ED0E-9D58-0909-56C0208EB84F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DAECC59-ED0E-9D58-0909-56C0208EB84F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DAECC59-ED0E-9D58-0909-56C0208EB84F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DAECC59-ED0E-9D58-0909-56C0208EB84F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DAECC59-ED0E-9D58-0909-56C0208EB84F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

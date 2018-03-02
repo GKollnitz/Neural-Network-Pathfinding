@@ -92,23 +92,6 @@ public class NNManager : MonoBehaviour
             speed = newSpeed;
         }
 
-        if (Input.GetButtonDown("Fire2"))
-        {
-            /*
-            for (int i = 0; i < nrColliders; i++)
-            {
-                Destroy(colliders[0]);
-                colliders.RemoveAt(0);
-            }
-
-            for (int i = 0; i < nrColliders; i++)
-            {
-                Vector3 pos = new Vector3(UnityEngine.Random.Range(0,xSpawn)*0.26f+xSpawnMin, -(UnityEngine.Random.Range(0,ySpawn)*0.26f+ySpawnMin), 0);
-                GameObject unitP = ((GameObject)Instantiate(collisionPrefab, pos, collisionPrefab.transform.rotation));
-                colliders.Add(unitP);*/
-            
-        }
-
         for(int i = 0; i<unitList.Count(); i++)
         {
             if(unitList[i].colliding)
@@ -116,6 +99,7 @@ public class NNManager : MonoBehaviour
                 unitList[i].net.AddKnowledge(-Time.deltaTime*speed);
             }
             
+            //Sets up a perimiter outside of the level, to keep the Units from flying off into space
             if(unitList[i].transform.position.x<-0.5)
             {
                 unitList[i].colliding = true;
@@ -136,10 +120,14 @@ public class NNManager : MonoBehaviour
                 unitList[i].colliding = true;
                 unitList[i].lastWord = "out";
             }
+
+
             if (!unitList[i].colliding)
             {
                 allColliding = false;
             }
+
+
             if (unitList[i].atGoal && pathfindingToggled)
             {
                 unitList[i].timeTaken = 0;
@@ -149,6 +137,7 @@ public class NNManager : MonoBehaviour
                     Color newColor = Color.yellow;
                     newColor.a = 0.3f;
                     unitList[i].GetComponent<SpriteRenderer>().color = newColor;
+                    //Reaching their first goal, the networks are rewarded with 100 knowledgepoints subtracted by the time it took for them to reach it
                     unitList[i].net.AddKnowledge(100-unitList[i].timeTaken);
                 }
                 else if (unitList[i].goal == goal[1])
@@ -157,6 +146,7 @@ public class NNManager : MonoBehaviour
                     Color newColor = Color.green;
                     newColor.a = 0.3f;
                     unitList[i].GetComponent<SpriteRenderer>().color = newColor;
+                    //Reaching their second goal, the networks are rewarded with 300 knowledgepoints subtracted by the time it took for them to reach it
                     unitList[i].net.AddKnowledge(300 - unitList[i].timeTaken);
                 }
                 else if (unitList[i].goal == goal[2])
@@ -165,19 +155,22 @@ public class NNManager : MonoBehaviour
                     Color newColor = Color.cyan;
                     newColor.a = 0.3f;
                     unitList[i].GetComponent<SpriteRenderer>().color = newColor;
-                    unitList[i].net.AddKnowledge(100 - unitList[i].timeTaken);
+                    //Reaching their third goal, the networks are rewarded with 450 knowledgepoints subtracted by the time it took for them to reach it
+                    unitList[i].net.AddKnowledge(450 - unitList[i].timeTaken);
                 }
                 else if (unitList[i].goal == goal[3])
                 {
                     Color newColor = Color.magenta;
                     newColor.a = 0.3f;
                     unitList[i].GetComponent<SpriteRenderer>().color = newColor;
+                    //Reaching their fourth goal, the networks are rewarded with 600 knowledgepoints subtracted by the time it took for them to reach it
                     unitList[i].net.AddKnowledge(600 - unitList[i].timeTaken);
                     unitList[i].goal = start;
                 }
                 else if (unitList[i].goal == start)
                 {
                     reachedEnd = true;
+                    //Reaching their fifth goal, the networks are rewarded with 1000 knowledgepoints subtracted by the time it took for them to reach it
                     unitList[i].net.AddKnowledge(1000 - unitList[i].timeTaken);
                     unitList[i].goal = goal[0];
                 }
@@ -195,7 +188,8 @@ public class NNManager : MonoBehaviour
 
         
 
-        //Every time the timer expires or the "Jump" Key is pressed, a new generation is born and replaces their senior.
+        //Every time the "Jump" Key is pressed, the timer reaches zero, the manager deems the generation successful,
+        //all the units are stuck, or when the user presses the button "New Generation" on their interface, a new generation is born and replaces their senior.
 
         if (Input.GetButtonDown("Jump") || timer < 0 || atGoal || allColliding || NNInterface.newGen)
 		{
@@ -215,14 +209,18 @@ public class NNManager : MonoBehaviour
 	 		
 	 	}
 
+        //If the user pressed the save button
         if (NNInterface.save)
         {
             Save(NNInterface.fileName);
             NNInterface.save = false;
         }
+        //If the user pressed the load button
         else if (NNInterface.load)
         {
             Load(NNInterface.fileName);
+
+            //Reset the units and networks on load
             NNInterface.load = false;
             timer = totalTimer;
             Color te = Color.white;
@@ -255,13 +253,15 @@ public class NNManager : MonoBehaviour
         float range = 0.3f;
         unit.lastWord = "none";
 
+
+        //Checks the surrounding gridtiles for possible collisions
+        
         //Left check
         RaycastHit2D hit = Physics2D.Raycast(unit.transform.position - new Vector3(0,0.18f,0),Vector2.left, range);
         if (hit.collider != null && hit.transform.gameObject.tag != "unit")
         {
             left = 1;
             unit.lastWord = "left";
-            unit.closeCollisions++;
         }
         else
         {
@@ -270,7 +270,6 @@ public class NNManager : MonoBehaviour
             {
                 left = 1;
                 unit.lastWord = "left";
-                unit.closeCollisions++;
             }
             else
             {
@@ -279,7 +278,6 @@ public class NNManager : MonoBehaviour
                 {
                     left = 1;
                     unit.lastWord = "left";
-                    unit.closeCollisions++;
                 }
             }
         }
@@ -290,7 +288,6 @@ public class NNManager : MonoBehaviour
         {
             right = 1;
             unit.lastWord = "right";
-            unit.closeCollisions++;
 
         }
         else
@@ -300,7 +297,6 @@ public class NNManager : MonoBehaviour
             {
                 right = 1;
                 unit.lastWord = "right";
-                unit.closeCollisions++;
 
             }
             else
@@ -310,7 +306,6 @@ public class NNManager : MonoBehaviour
                 {
                     right = 1;
                     unit.lastWord = "right";
-                    unit.closeCollisions++;
 
                 }
             }
@@ -322,7 +317,6 @@ public class NNManager : MonoBehaviour
         {
             up = 1;
             unit.lastWord = "up";
-            unit.closeCollisions++;
 
         }
         else
@@ -332,7 +326,6 @@ public class NNManager : MonoBehaviour
             {
                 up = 1;
                 unit.lastWord = "up";
-                unit.closeCollisions++;
 
             }
             else
@@ -342,7 +335,6 @@ public class NNManager : MonoBehaviour
                 {
                     up = 1;
                     unit.lastWord = "up";
-                    unit.closeCollisions++;
 
                 }
             }
@@ -353,7 +345,6 @@ public class NNManager : MonoBehaviour
         {
             down = 1;
             unit.lastWord = "down";
-            unit.closeCollisions++;
 
         }
         else
@@ -363,7 +354,6 @@ public class NNManager : MonoBehaviour
             {
                 down = 1;
                 unit.lastWord = "down";
-                unit.closeCollisions++;
 
             }
             else
@@ -373,16 +363,17 @@ public class NNManager : MonoBehaviour
                 {
                     down = 1;
                     unit.lastWord = "down";
-                    unit.closeCollisions++;
 
                 }
             }
         }
-        //Debug.Log(left + ", " + right + ", " + up + ", " + down);
         
+        //Set the inputs and fed into the network
         float[] inputs = new float[] { normRel.x, normRel.y, left, right, up, down};
         float[] outputs = unit.net.FeedForward(inputs);
 
+        //Depending on output, chooses the next target posiiton to be either to the righ, left, up, down from its current position
+        //They are not allowed to go back the way they came, unless they just reached their goal
         if (outputs[0] > outputs[1] && outputs[0] > outputs[2] && outputs[0] > outputs[3] && !unit.wentLeft)
         {
             unit.wentRight = true;
@@ -457,16 +448,14 @@ public class NNManager : MonoBehaviour
                 unit.target = unit.transform.position + new Vector3(0, 0.26f, 0);
                 unit.lastPos = unit.transform.position;
             }
-            else
-            {
-                Debug.Log("MEN ÅHHHHHHHH");
-            }
         }
         
     }
 
 	void CreateNewGeneration ()
 	{
+
+        //Autosave at every 6 concurrent successful attempts by the AI
         if (reachedEnd)
         {
             reachedEndCount++;
@@ -477,10 +466,11 @@ public class NNManager : MonoBehaviour
 
         if (reachedEndCount>6)
         {
-            string timedate = "_"+System.DateTime.Now.Hour+"-"+System.DateTime.Now.Minute/*+"_"+System.DateTime.Now.Year + ":" + System.DateTime.Now.Month + ":" + System.DateTime.Now.Day*/;
+            string timedate = "_"+System.DateTime.Now.Hour+"-"+System.DateTime.Now.Minute;
             Save("auto"+generationNumber+timedate);
             reachedEndCount = 0;
         }
+        //----
 
         timer = totalTimer;
         try
@@ -493,7 +483,7 @@ public class NNManager : MonoBehaviour
         }
         catch { }
 
-        //CollidersCheck
+        //If colliders are toggled on
         if (collidersToggle)
         {
             for (int i = 0; i < nrColliders; i++)
@@ -506,7 +496,7 @@ public class NNManager : MonoBehaviour
 
         pathfindingToggled = pathfindingToggle;
 
-        //PathfindingCheck
+        //If pathfinding is toggled on
         if (!pathfindingToggle)
         {
             for (int i = 0; i < 4; i++)
@@ -525,12 +515,12 @@ public class NNManager : MonoBehaviour
                 goal[i].GetComponent<SpriteRenderer>().color = tmp;
             }
         }
-
+        //Reset and prepare all units to be given a new network
         for (int i = 0; i < nrUnits; i++)
         {
-            //unitList[i].net.AddKnowledge(unitList[i].closeCollisions*unitList[i].net.GetKnowledge()*0.1f);
+            //Add another reward to the networks, based on how far they were from their current goal
             unitList[i].net.AddKnowledge(100 - Vector3.Distance(unitList[i].transform.position, unitList[i].goal.transform.position));
-            unitList[i].closeCollisions = 0;
+
             unitList[i].transform.rotation = new Quaternion();
             unitList[i].goal = goal[0];
             unitList[i].colliding = false;
@@ -538,18 +528,18 @@ public class NNManager : MonoBehaviour
             unitList[i].wentRight = false;
             unitList[i].wentUp = false;
             unitList[i].wentDown = false;
-            unitList[i].name = "Unit (Clone)";
             Color te = Color.white;
             te.a = 0.3f;
             unitList[i].GetComponent<SpriteRenderer>().color = te;
         }
-            //Sortera dem efter effektivitet
+            //Sort them depending on knowledge
             networks.Sort();
         
-        //Rensa bort den sämre hälften
+        //Remove the worse half
         networks.RemoveRange(0, nrUnits / 2);
         List<NeuralNetwork> newNetworks = new List<NeuralNetwork>();
-        //Ta två parents och generera fyra barn, och ersätt dem.
+
+        //Take two "parents", and generate four children, that have a mix of their parents weights
         for(int i = 0; i<networks.Count; i=i+2)
         {
             float[] parent1Layer1 = networks[i].GetWeights(1);
@@ -624,7 +614,7 @@ public class NNManager : MonoBehaviour
 
         networks = newNetworks;
         
-        //Reset Knowledgemätare
+        //Reset Knowledge and more
         for (int i = 0; i<nrUnits; i++)
         {
             unitList[i].timeTaken = 0;
@@ -633,6 +623,7 @@ public class NNManager : MonoBehaviour
         }
     }
 
+    //Save current networks to textfile
     void Save(string fileName)
     {
         int arraySize = layers[0] * layers[1] + layers[1] * layers[2] + layers[2] * layers[3];
@@ -670,6 +661,7 @@ public class NNManager : MonoBehaviour
         }
     }
 
+    //Load networks from textfile
     void Load(string fileName)
     {
         int arraySize = layers[0] * layers[1] + layers[1] * layers[2] + layers[2] * layers[3];
